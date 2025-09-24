@@ -1,6 +1,7 @@
 use anyhow::Result;
+use pathdiff::diff_paths;
 use serde::de::DeserializeOwned;
-use std::path::Path;
+use std::path::{Path, PathBuf};
 
 /// Like try, but for iterators that return [`Option<Result<_, _>>`].
 ///
@@ -29,4 +30,32 @@ pub fn load_toml<T: DeserializeOwned + Default>(path: impl AsRef<Path>) -> Resul
     } else {
         Ok(T::default())
     }
+}
+
+/// Make a set of paths relative to the provided `root` path
+///
+/// Each item would only be an `Err` if the path isn't a child of the provided
+/// root path
+pub fn make_paths_relative_to(
+    x: &[impl AsRef<Path>],
+    root: impl AsRef<Path>,
+) -> Vec<std::io::Result<PathBuf>> {
+    x.iter()
+        .map(|x| {
+            let normalised = x.as_ref().canonicalize()?;
+            return Ok(diff_paths(
+                normalised,
+                PathBuf::from(root.as_ref().to_path_buf()).canonicalize()?,
+            )
+            .unwrap());
+        })
+        .collect()
+}
+
+/// Utility to normalise a set of paths
+pub fn normalise_paths(paths: &[impl AsRef<Path>]) -> Vec<std::io::Result<PathBuf>> {
+    paths
+        .iter()
+        .map(|x| x.as_ref().canonicalize())
+        .collect()
 }

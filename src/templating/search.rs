@@ -1,7 +1,7 @@
 use crate::config::templating::TEMPLATE_CFG_FILENAME;
 use crate::itry;
 use anyhow::Result;
-use std::path::{Path, PathBuf};
+use std::path::PathBuf;
 use walkdir::WalkDir;
 
 pub fn search_templates(search_locations: Vec<PathBuf>) -> Result<Vec<PathBuf>> {

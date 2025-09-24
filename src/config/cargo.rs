@@ -1,5 +1,4 @@
 use serde::{Deserialize, Serialize};
-use std::path::PathBuf;
 
 /// A configuration for rust in a specific workspace
 #[derive(Debug, Serialize, Deserialize, Clone)]
@@ -18,16 +17,16 @@ pub struct CargoConfig {
     pub add_dependency_command: Option<String>,
 }
 
-impl Default for CargoConfig{
+impl Default for CargoConfig {
     fn default() -> Self {
-        Self{
+        Self {
             run_command: "cargo run".to_string(),
             build_command: "cargo build".to_string(),
             test_command: "cargo test".to_string(),
 
             new_binary_command: "cargo init --bin".to_string(),
             new_library_command: "cargo init --lib".to_string(),
-            
+
             new_workspace_command: None,
             add_dependency_command: None,
         }

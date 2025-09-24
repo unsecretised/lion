@@ -1,8 +1,9 @@
 use crate::config::templating::TemplateConfig;
 use crate::templating::search::search_templates;
 use crate::util::load_toml;
-use std::path::{Path, PathBuf};
+use std::path::PathBuf;
 use std::str::FromStr;
+use anyhow::Result;
 
 mod config;
 mod languages;
@@ -21,16 +22,20 @@ fn main() {
 
     println!(
         "{:#?}",
-        search_templates(vec![PathBuf::from_str(".\\").unwrap()])
+        &search_templates(vec![
+            PathBuf::from_str(".\\").unwrap()
+        ])
             .unwrap()
             .into_iter()
             .map(|x| {
-                println!("{:?}", x);
-                load_toml::<TemplateConfig>(x.clone())
+                let x = x.canonicalize()?;
+                println!("{:?} {}", x, x.exists());
+                Ok(load_toml::<TemplateConfig>(x.clone())
                     .unwrap()
-                    .preprocess(x.parent().unwrap(), &global_cfg)
+                    .resolve(x.parent().unwrap(), &global_cfg)
+                )
             })
-            .collect::<Vec<_>>()
+            .collect::<Vec<Result<_>>>()
     );
 
     /*println!(

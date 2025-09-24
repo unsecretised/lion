@@ -8,6 +8,7 @@ version = "0.5.0"
 dependencies = [
  "anyhow",
  "directories",
+ "map-ok",
  "pathdiff",
  "serde",
  "setter",
@@ -102,6 +103,12 @@ dependencies = [
  "bitflags",
  "libc",
 ]
+
+[[package]]
+name = "map-ok"
+version = "1.0.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "865d498d5ef7e58564f3d9f10d5133c9afedde2c635558fbe38b704030849ee7"
 
 [[package]]
 name = "option-ext"
